@@ -1,0 +1,127 @@
+Projeto: Sistema de Controle de Acesso Hospitalar
+
+Descrição:
+Este é um sistema de controle de acesso hospitalar desenvolvido com Next.js 13, utilizando o App Router. O sistema gerencia o acesso de pacientes, funcionários e visitantes a um hospital, utilizando tecnologias como RFID e QR Code para identificação.
+
+Tecnologias principais:
+- Next.js 13 (App Router)
+- React
+- TypeScript
+- Knex.js (para ORM e migrações de banco de dados)
+- PostgreSQL
+- NextAuth.js (para autenticação)
+- Tailwind CSS (para estilização)
+- Shadcn UI (para componentes de UI)
+
+Estrutura do Projeto:
+/src
+  /app
+    /api
+      /auth
+        /[...nextauth]
+          route.ts
+      /pacientes
+        route.ts
+      /funcionarios
+        route.ts
+      /visitantes
+        route.ts
+      /logs
+        route.ts
+    /dashboard
+      page.tsx
+    /pacientes
+      page.tsx
+    /funcionarios
+      page.tsx
+    /visitantes
+      page.tsx
+    /relatorios
+      page.tsx
+    /configuracoes
+      page.tsx
+    layout.tsx
+    page.tsx
+  /components
+    /ui
+      (componentes shadcn/ui)
+    layout.tsx
+  /lib
+    knex.ts
+  /db
+    /migrations
+      20230601000000_create_tables.js
+  middleware.ts
+/public
+knexfile.js
+next.config.js
+package.json
+tsconfig.json
+
+Funcionalidades principais:
+1. Autenticação de usuários (funcionários do hospital)
+2. Registro e gerenciamento de pacientes
+3. Registro e gerenciamento de funcionários
+4. Registro e gerenciamento de visitantes
+5. Geração de QR Codes para identificação
+6. Integração com sistema RFID para controle de acesso
+7. Logs de acesso para monitoramento de entradas e saídas
+8. Dashboard com visão geral do sistema
+9. Relatórios de acesso e ocupação
+
+Modelos de Dados:
+1. Usuários (funcionários do hospital)
+2. Pacientes
+3. Visitantes
+4. Logs de Acesso
+
+Rotas de API:
+1. /api/auth/[...nextauth] - Autenticação
+2. /api/pacientes - CRUD de pacientes
+3. /api/funcionarios - CRUD de funcionários
+4. /api/visitantes - CRUD de visitantes
+5. /api/logs - Registro e consulta de logs de acesso
+
+Páginas principais:
+1. Dashboard - Visão geral do sistema
+2. Pacientes - Listagem e registro de pacientes
+3. Funcionários - Listagem e registro de funcionários
+4. Visitantes - Listagem e registro de visitantes
+5. Relatórios - Geração de relatórios de acesso e ocupação
+6. Configurações - Configurações do sistema
+
+Fluxo de trabalho típico:
+1. Funcionário faz login no sistema
+2. Registra novos pacientes ou visitantes conforme necessário
+3. Gera QR Code ou associa RFID para identificação
+4. Monitora entradas e saídas através do dashboard
+5. Gera relatórios de acesso e ocupação
+
+Segurança e Controle de Acesso:
+- Autenticação baseada em JWT com NextAuth.js
+- Middleware para proteção de rotas
+- Controle de acesso baseado em cargos (ex: médico, enfermeiro, recepcionista)
+- Logs detalhados de todas as atividades do sistema
+
+Integração com Hardware:
+- Leitores RFID para controle de acesso físico
+- Impressoras de QR Code para identificação temporária de visitantes
+- Câmeras de segurança (integração futura)
+
+Escalabilidade e Manutenção:
+- Arquitetura modular para fácil expansão
+- Uso de migrations do Knex para versionamento do banco de dados
+- Testes automatizados (a serem implementados)
+
+Próximos passos de desenvolvimento:
+1. Implementar testes unitários e de integração
+2. Adicionar mais relatórios e análises de dados
+3. Melhorar a interface do usuário com mais feedback e animações
+4. Implementar um sistema de notificações em tempo real
+5. Desenvolver um aplicativo móvel para acesso rápido às funcionalidades principais
+
+Este projeto oferece uma solução completa e flexível para o controle de acesso em ambientes hospitalares, priorizando a segurança, eficiência e facilidade de uso.
+
+Please make sure to add the following environment variable to your project:
+
+<AddEnvironmentVariables names={["DATABASE_URL"]} />
