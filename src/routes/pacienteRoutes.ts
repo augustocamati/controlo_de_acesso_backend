@@ -3,6 +3,20 @@ import db from "../database"
 
 const router = Router()
 
+router.get("/ac", async (req, res) => {
+  const pacientes = {
+    "id": 7,
+    "nome": "Maria Santos",
+    "email": "maria@hospital.com",
+    "cargo": "Enfermeira",
+    "departamento": "Emergência",
+    "created_at": "2025-03-02 21:03:52",
+    "updated_at": "2025-03-02 21:03:52"
+  }
+  res.json(pacientes)
+})
+ 
+
 router.get("/", async (req, res) => {
   const pacientes = await db("pacientes").select("*")
   res.json(pacientes)
