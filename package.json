@@ -5,7 +5,7 @@
   "main": "src/server.ts",
   "scripts": {
     "dev": "nodemon src/server",
-    "build": "npx knex migrate:latest npx knex seed:run"
+    "vercel-build": "npx knex migrate:latest"
   },
   "keywords": [],
   "author": "",
