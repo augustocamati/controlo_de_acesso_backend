@@ -40,15 +40,22 @@ module.exports = {
   production: {
     client: 'postgresql',
     connection: {
-      database: 'my_db',
-      user:     'username',
-      password: 'password'
+     
+      database: 'neondb',
+      user:     'neondb_owner',
+      password: 'npg_HOT5Jw9jeniR'
     },
+     useNullAsDefault: true,
+     seeds: {
+      directory: './src/database/seeds/',
+    },
+   
     pool: {
       min: 2,
       max: 10
     },
     migrations: {
+       directory: './src/database/migrations',
       tableName: 'knex_migrations'
     }
   }
