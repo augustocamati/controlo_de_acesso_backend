@@ -10,30 +10,40 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// Modelo de Usuários/Funcionários
+// Modelo de Usuário (Informações básicas para login e autenticação)
 model Usuario {
-  id             Int           @id @default(autoincrement())
-  nome           String
-  email          String        @unique
-  senha          String
-  cargo          String
-  departamento   String?
-  rfid           String?       @unique
+  id        Int       @id @default(autoincrement())
+  nome      String
+  email     String    @unique
+  senha     String
+  status    String    @default("ativo")
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 
-  status         String        @default("ativo")
+ 
+}
 
-  createdAt      DateTime      @default(now())
-  updatedAt      DateTime      @updatedAt
+// Modelo de Funcionário (Informações específicas de trabalhadores do hospital)
+model Funcionario {
+  id           Int       @id @default(autoincrement())
+ 
+
+  cargo        String
+  departamento String?
+  rfid         String?   @unique
+
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
 
   // Relacionamentos
-  permissoes     Permissao[]
-  logsAcesso     LogAcesso[]
-  alertas        Alerta[]
-  cartaoRfid     CartaoRfid?
-  grupos         UsuarioGrupo[]
-  relatorios     Relatorio[]
-   @@map("usuarios")
+  permissoes   Permissao[]
+  logsAcesso   LogAcesso[]
+  alertas      Alerta[]
+  cartaoRfid   CartaoRfid?
+  grupos       UsuarioGrupo[]
+  @@map("funcionarios")
 }
+
 
 // Modelo de Pacientes
 model Paciente {
@@ -133,7 +143,7 @@ model Permissao {
   updatedAt      DateTime      @updatedAt
 
   // Relacionamentos
-  usuario        Usuario       @relation(fields: [usuarioId], references: [id])
+  funcionario    Funcionario?  @relation(fields: [id], references: [id])
   usuarioId      Int
   area           Area?         @relation(fields: [areaId], references: [id])
   areaId         Int?
@@ -154,7 +164,7 @@ model LogAcesso {
   createdAt      DateTime      @default(now())
 
   // Relacionamentos
-  usuario        Usuario?      @relation(fields: [usuarioId], references: [id])
+funcionario    Funcionario?  @relation(fields: [id], references: [id])
   usuarioId      Int?
   paciente       Paciente?     @relation(fields: [pacienteId], references: [id])
   pacienteId     Int?
@@ -207,7 +217,7 @@ model Alerta {
   updatedAt        DateTime      @updatedAt
 
   // Relacionamentos
-  usuario          Usuario?      @relation(fields: [usuarioId], references: [id])
+  funcionario      Funcionario?  @relation(fields: [id], references: [id])
   usuarioId        Int?
   area             Area?         @relation(fields: [areaId], references: [id])
   areaId           Int?
@@ -244,7 +254,7 @@ model CartaoRfid {
   updatedAt      DateTime      @updatedAt
 
   // Relacionamentos
-  usuario        Usuario?      @relation(fields: [usuarioId], references: [id])
+  funcionario    Funcionario?  @relation(fields: [id], references: [id])
   usuarioId      Int?          @unique
   paciente       Paciente?     @relation(fields: [pacienteId], references: [id])
   pacienteId     Int?          @unique
@@ -281,7 +291,7 @@ model GrupoArea {
 
 // Tabela de Relação entre Usuários e Grupos
 model UsuarioGrupo {
-  usuario        Usuario       @relation(fields: [usuarioId], references: [id])
+  funcionario    Funcionario   @relation(fields: [usuarioId], references: [id])
   usuarioId      Int
   grupo          GrupoAcesso   @relation(fields: [grupoId], references: [id])
   grupoId        Int
@@ -319,9 +329,7 @@ model Relatorio {
   createdAt      DateTime      @default(now())
   updatedAt      DateTime      @updatedAt
 
-  // Relacionamentos
-  usuario        Usuario       @relation(fields: [usuarioId], references: [id])
-  usuarioId      Int
+
 
   @@map("relatorios")
 }
