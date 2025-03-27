@@ -19,9 +19,9 @@ model Usuario {
   cargo          String
   departamento   String?
   rfid           String?       @unique
-  dataAdmissao   DateTime
+
   status         String        @default("ativo")
-  ultimoAcesso   DateTime?
+
   createdAt      DateTime      @default(now())
   updatedAt      DateTime      @updatedAt
 
