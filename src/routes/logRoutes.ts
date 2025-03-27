@@ -6,7 +6,7 @@ const prisma = new PrismaClient()
 
 router.get("/", async (req, res) => {
   try {
-    const logs = await prisma.log.findMany()
+    const logs = await prisma.logAcesso.findMany()
     res.json(logs)
   } catch (error) {
     res.status(500).json({ message: "Erro ao buscar logs", error })
@@ -15,7 +15,7 @@ router.get("/", async (req, res) => {
 
 router.get("/:id", async (req, res) => {
   try {
-    const log = await prisma.log.findUnique({
+    const log = await prisma.logAcesso.findUnique({
       where: { id: Number(req.params.id) },
     })
     log
@@ -28,7 +28,7 @@ router.get("/:id", async (req, res) => {
 
 router.post("/", async (req, res) => {
   try {
-    const log = await prisma.log.create({
+    const log = await prisma.logAcesso.create({
       data: req.body,
     })
     res.status(201).json(log)
