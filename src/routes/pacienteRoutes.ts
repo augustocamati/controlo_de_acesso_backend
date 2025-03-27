@@ -1,38 +1,37 @@
 import { Router } from "express"
-import db from "../database"
+import { PrismaClient } from "@prisma/client"
 
 const router = Router()
-
-router.get("/ac", async (req, res) => {
-  const pacientes = {
-    "id": 7,
-    "nome": "Maria Santos",
-    "email": "maria@hospital.com",
-    "cargo": "Enfermeira",
-    "departamento": "Emergência",
-    "created_at": "2025-03-02 21:03:52",
-    "updated_at": "2025-03-02 21:03:52"
-  }
-  res.json(pacientes)
-})
- 
+const prisma = new PrismaClient()
 
 router.get("/", async (req, res) => {
-  const pacientes = await db("pacientes").select("*")
-  res.json(pacientes)
+  try {
+    const pacientes = await prisma.paciente.findMany()
+    res.json(pacientes)
+  } catch (error) {
+    res.status(500).json({ message: "Erro ao buscar pacientes", error })
+  }
 })
- 
+
 router.get("/:id", async (req, res) => {
-  const paciente = await db("pacientes").where({ id: req.params.id }).first()
-  paciente
-    ? res.json(paciente)
-    : res.status(404).json({ message: "Paciente não encontrado" })
+  try {
+    const paciente = await prisma.paciente.findUnique({
+      where: { id: Number(req.params.id) },
+    })
+
+    paciente
+      ? res.json(paciente)
+      : res.status(404).json({ message: "Paciente não encontrado" })
+  } catch (error) {
+    res.status(400).json({ message: "Erro ao buscar paciente", error })
+  }
 })
 
 router.post("/", async (req, res) => {
   try {
-    const [id] = await db("pacientes").insert(req.body)
-    const paciente = await db("pacientes").where({ id }).first()
+    const paciente = await prisma.paciente.create({
+      data: req.body,
+    })
     res.status(201).json(paciente)
   } catch (error) {
     res.status(400).json({ message: "Erro ao criar paciente", error })
@@ -41,8 +40,11 @@ router.post("/", async (req, res) => {
 
 router.put("/:id", async (req, res) => {
   try {
-    await db("pacientes").where({ id: req.params.id }).update(req.body)
-    const paciente = await db("pacientes").where({ id: req.params.id }).first()
+    const paciente = await prisma.paciente.update({
+      where: { id: Number(req.params.id) },
+      data: req.body,
+    })
+
     res.json(paciente)
   } catch (error) {
     res.status(400).json({ message: "Erro ao atualizar paciente", error })
@@ -51,7 +53,9 @@ router.put("/:id", async (req, res) => {
 
 router.delete("/:id", async (req, res) => {
   try {
-    await db("pacientes").where({ id: req.params.id }).del()
+    await prisma.paciente.delete({
+      where: { id: Number(req.params.id) },
+    })
     res.status(204).send()
   } catch (error) {
     res.status(400).json({ message: "Erro ao excluir paciente", error })
