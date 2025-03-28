@@ -24,9 +24,11 @@ model Usuario {
 // Modelo de Funcionário (Informações específicas de trabalhadores do hospital)
 model Funcionario {
   id Int @id @default(autoincrement())
+  nome      String
+  email     String   @unique
   cargo        String
   departamento String?
-  rfid         String? @unique
+  rfid         String @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
