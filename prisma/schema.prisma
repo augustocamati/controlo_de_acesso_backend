@@ -23,14 +23,14 @@ model Usuario {
 
 // Modelo de Funcionário (Informações específicas de trabalhadores do hospital)
 model Funcionario {
-  id Int @id @default(autoincrement())
-  nome      String
-  email     String   @unique
+  id           Int      @id @default(autoincrement())
+  nome         String
+  email        String   @unique
   cargo        String
   departamento String?
-  rfid         String @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  rfid         String   @unique
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 
   // Relacionamentos
   permissoes Permissao[]
@@ -44,17 +44,13 @@ model Funcionario {
 
 // Modelo de Pacientes
 model Paciente {
-  id             Int       @id @default(autoincrement())
+  id             Int      @id @default(autoincrement())
   nome           String
   dataNascimento DateTime
   numeroQuarto   String?
-  dataAdmissao   DateTime
-  dataAlta       DateTime?
-  rfid           String?   @unique
-  status         String    @default("internado")
   observacoes    String?
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 
   // Relacionamentos
   quarto     Quarto?     @relation(fields: [quartoId], references: [id])
