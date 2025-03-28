@@ -33,7 +33,7 @@ model Funcionario {
   updatedAt    DateTime @updatedAt
 
   // Relacionamentos
-  permissoes Permissao[]
+
   logsAcesso LogAcesso[]
   alertas    Alerta[]
   cartaoRfid CartaoRfid?
@@ -97,7 +97,7 @@ model Area {
   updatedAt   DateTime @updatedAt
 
   // Relacionamentos
-  permissoes     Permissao[]
+
   logsAcesso     LogAcesso[]
   dispositivos   Dispositivo[]
   alertas        Alerta[]
@@ -120,7 +120,7 @@ model Quarto {
 
   // Relacionamentos
   pacientes    Paciente[]
-  permissoes   Permissao[]
+
   logsAcesso   LogAcesso[]
   dispositivos Dispositivo[]
   alertas      Alerta[]
@@ -128,26 +128,17 @@ model Quarto {
   @@map("quartos")
 }
 
-// Modelo de Permissões
 model Permissao {
-  id            Int      @id @default(autoincrement())
-  nivelAcesso   String
-  horarioInicio String?
-  horarioFim    String?
-  diasSemana    String?
-  status        String   @default("ativo")
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  id        Int      @id @default(autoincrement())
+  usuario   String
+  cargo     String
+  salas     String   // Armazena salas como JSON (array de strings)
+  quarto    String?
+  rfid      String   @unique
+  status    String
 
-  // Relacionamentos
-  funcionario Funcionario? @relation(fields: [id], references: [id])
-  usuarioId   Int
-  area        Area?        @relation(fields: [areaId], references: [id])
-  areaId      Int?
-  quarto      Quarto?      @relation(fields: [quartoId], references: [id])
-  quartoId    Int?
-
-  @@map("permissoes")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 // Modelo de Logs de Acesso
