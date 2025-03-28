@@ -59,7 +59,7 @@ router.delete("/:id", async (req, res) => {
     res.status(204).send()
   } catch (error) {
     res.status(400).json({ message: "Erro ao excluir paciente", error })
-  }
+  } 
 })
 
 export default router

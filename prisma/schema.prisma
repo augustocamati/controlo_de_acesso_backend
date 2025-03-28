@@ -139,6 +139,7 @@ model Permissao {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  @@map("permissoes")
 }
 
 // Modelo de Logs de Acesso
