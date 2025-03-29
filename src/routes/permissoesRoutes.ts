@@ -22,7 +22,7 @@ router.post("/", async (req, res) => {
 
     res.status(201).json(novaPermissao)
   } catch (error) {
-    res.status(500).json({ error: "Erro ao criar permissão." })
+    res.status(500).json({ message: "Erro ao criar permissão.", error })
   }
 })
 
@@ -39,7 +39,7 @@ router.get("/", async (req, res) => {
 
     res.json(permissoesFormatadas)
   } catch (error) {
-    res.status(500).json({ error: "Erro ao listar permissões." })
+    res.status(500).json({ message: "Erro ao listar permissões." ,error})
   }
 })
 
@@ -64,7 +64,7 @@ router.put("/:id", async (req, res) => {
 
     res.json(permissaoAtualizada)
   } catch (error) {
-    res.status(500).json({ error: "Erro ao atualizar permissão." })
+    res.status(500).json({ message: "Erro ao atualizar permissão.", error })
   }
 })
 
@@ -77,7 +77,7 @@ router.delete("/:id", async (req, res) => {
 
     res.status(204).send()
   } catch (error) {
-    res.status(500).json({ error: "Erro ao deletar permissão." })
+    res.status(500).json({ message: "Erro ao deletar permissão." ,error})
   }
 })
 
