@@ -27,7 +27,7 @@ model Funcionario {
   nome         String
   email        String   @unique
   cargo        String
-  rfid         String   @unique
+  
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
@@ -67,7 +67,7 @@ model Visitante {
   nome           String
   bi             String
   motivoVisita   String
-  rfid String?   @unique
+
 
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
