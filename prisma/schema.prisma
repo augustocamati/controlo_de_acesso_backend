@@ -53,7 +53,7 @@ model Paciente {
   quartoId   Int?
 
   // Relacionamentos
-  quarto     Quarto?     @relation(fields: [quartoId], references: [id])
+  quarto     Quarto?     @relation(fields: [quartoId], references: [id], onDelete: SetNull)
   visitantes Visitante[]
   logsAcesso LogAcesso[]
   cartaoRfid CartaoRfid?
@@ -116,8 +116,8 @@ model Quarto {
   updatedAt  DateTime @updatedAt
 
   // Relacionamentos
-  pacientes    Paciente[]
 
+ pacientes   Paciente[]
   logsAcesso   LogAcesso[]
   dispositivos Dispositivo[]
   alertas      Alerta[]
