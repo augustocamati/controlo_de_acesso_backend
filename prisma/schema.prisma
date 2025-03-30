@@ -67,10 +67,8 @@ model Visitante {
   nome           String
   bi             String
   motivoVisita   String
-  rfidTemporario String?   @unique
-  dataEntrada    DateTime @db.Date
-  dataSaida      DateTime? @db.Date
-  status         String    @default("ativo")
+  rfid String?   @unique
+
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
 
