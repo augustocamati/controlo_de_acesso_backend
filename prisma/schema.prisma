@@ -46,7 +46,7 @@ model Funcionario {
 model Paciente {
   id             Int      @id @default(autoincrement())
   nome           String
-  dataNascimento DateTime
+  dataNascimento DateTime @db.Date
   numeroQuarto   String?
   observacoes    String?
   createdAt      DateTime @default(now())
@@ -69,8 +69,8 @@ model Visitante {
   bi             String
   motivoVisita   String
   rfidTemporario String?   @unique
-  dataEntrada    DateTime
-  dataSaida      DateTime?
+  dataEntrada    DateTime @db.Date
+  dataSaida      DateTime? @db.Date
   status         String    @default("ativo")
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
