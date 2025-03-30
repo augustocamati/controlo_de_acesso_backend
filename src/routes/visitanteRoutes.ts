@@ -33,7 +33,12 @@ router.post("/", async (req, res) => {
   try {
     const visitante = await prisma.visitante.create({
       data: req.body,
+      include: {
+        paciente: true, // Inclui os dados do paciente associado ao visitante
+      },
     })
+    
+    console.log('visitante', visitante)
     res.status(201).json(visitante)
   } catch (error) {
     res.status(400).json({ message: "Erro ao criar visitante", error })
