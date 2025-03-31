@@ -23,13 +23,13 @@ model Usuario {
 
 // Modelo de Funcionário (Informações específicas de trabalhadores do hospital)
 model Funcionario {
-  id           Int      @id @default(autoincrement())
-  nome         String
-  email        String   @unique
-  cargo        String
-  
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  id    Int    @id @default(autoincrement())
+  nome  String
+  email String @unique
+  cargo String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   // Relacionamentos
 
@@ -50,7 +50,7 @@ model Paciente {
   observacoes    String?
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
-  quartoId   Int?
+  quartoId       Int?
 
   // Relacionamentos
   quarto     Quarto?     @relation(fields: [quartoId], references: [id], onDelete: SetNull)
@@ -63,14 +63,13 @@ model Paciente {
 
 // Modelo de Visitantes
 model Visitante {
-  id             Int       @id @default(autoincrement())
-  nome           String
-  bi             String
-  motivoVisita   String
+  id           Int    @id @default(autoincrement())
+  nome         String
+  bi           String
+  motivoVisita String
 
-
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   // Relacionamentos
   paciente   Paciente?   @relation(fields: [pacienteId], references: [id])
@@ -110,14 +109,14 @@ model Quarto {
   numero     String   @unique
   andar      String
   tipo       String
-  capacidade String      @default("1")
+  capacidade String   @default("1")
   status     String   @default("disponivel")
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
   // Relacionamentos
 
- pacientes   Paciente[]
+  pacientes    Paciente[]
   logsAcesso   LogAcesso[]
   dispositivos Dispositivo[]
   alertas      Alerta[]
@@ -126,16 +125,17 @@ model Quarto {
 }
 
 model Permissao {
-  id        Int      @id @default(autoincrement())
-  usuario   String
-  cargo     String
-  salas     String   // Armazena salas como JSON (array de strings)
-  quartos    String 
-  rfid      String   @unique
-  status    String
+  id      Int    @id @default(autoincrement())
+  usuario String
+  cargo   String
+  salas   String // Armazena salas como JSON (array de strings)
+  quartos String[] 
+  rfid    String @unique
+  status  String
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
   @@map("permissoes")
 }
 
@@ -144,7 +144,7 @@ model LogAcesso {
   id            Int      @id @default(autoincrement())
   rfid          String
   tipoAcesso    String
-  dataHora      DateTime
+  dataHora      DateTime 
   status        String
   dispositivoId String?
   ipAddress     String?
