@@ -130,7 +130,7 @@ model Permissao {
   usuario   String
   cargo     String
   salas     String   // Armazena salas como JSON (array de strings)
-  quarto    String?
+  quartos    String[]
   rfid      String   @unique
   status    String
 
