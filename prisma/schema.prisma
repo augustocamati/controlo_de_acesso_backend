@@ -110,7 +110,7 @@ model Quarto {
   numero     String   @unique
   andar      String
   tipo       String
-  capacidade Int      @default(1)
+  capacidade String      @default("1")
   status     String   @default("disponivel")
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
