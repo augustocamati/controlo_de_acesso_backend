@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -10,7 +7,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// Modelo de Usuário (Informações básicas para login e autenticação)
 model Usuario {
   id        Int      @id @default(autoincrement())
   nome      String
@@ -21,204 +17,173 @@ model Usuario {
   updatedAt DateTime @updatedAt
 }
 
-// Modelo de Funcionário (Informações específicas de trabalhadores do hospital)
 model Funcionario {
-  id    Int    @id @default(autoincrement())
-  nome  String
-  email String @unique
-  cargo String
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  // Relacionamentos
-
-  logsAcesso LogAcesso[]
-  alertas    Alerta[]
+  id         Int            @id @default(autoincrement())
+  cargo      String
+  createdAt  DateTime       @default(now())
+  updatedAt  DateTime       @updatedAt
+  email      String         @unique
+  nome       String
+  alertas    Alerta?
   cartaoRfid CartaoRfid?
+  logsAcesso LogAcesso?
   grupos     UsuarioGrupo[]
 
   @@map("funcionarios")
 }
 
-// Modelo de Pacientes
 model Paciente {
-  id             Int      @id @default(autoincrement())
+  id             Int         @id @default(autoincrement())
   nome           String
-  dataNascimento DateTime @db.Date
+  dataNascimento DateTime    @db.Date
   numeroQuarto   String?
   observacoes    String?
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
   quartoId       Int?
-
-  // Relacionamentos
-  quarto     Quarto?     @relation(fields: [quartoId], references: [id], onDelete: SetNull)
-  visitantes Visitante[]
-  logsAcesso LogAcesso[]
-  cartaoRfid CartaoRfid?
+  cartaoRfid     CartaoRfid?
+  logsAcesso     LogAcesso[]
+  quarto         Quarto?     @relation(fields: [quartoId], references: [id])
+  visitantes     Visitante[]
 
   @@map("pacientes")
 }
 
-// Modelo de Visitantes
 model Visitante {
-  id           Int    @id @default(autoincrement())
+  id           Int         @id @default(autoincrement())
   nome         String
   bi           String
   motivoVisita String
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  // Relacionamentos
-  paciente   Paciente?   @relation(fields: [pacienteId], references: [id])
-  pacienteId Int?
-  logsAcesso LogAcesso[]
-  cartaoRfid CartaoRfid?
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  pacienteId   Int?
+  cartaoRfid   CartaoRfid?
+  logsAcesso   LogAcesso[]
+  paciente     Paciente?   @relation(fields: [pacienteId], references: [id])
 
   @@map("visitantes")
 }
 
-// Modelo de Áreas/Salas
 model Area {
-  id          Int      @id @default(autoincrement())
-  nome        String
-  tipo        String
-  nivelAcesso String
-  andar       String?
-  capacidade  Int?
-  status      String   @default("ativo")
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  // Relacionamentos
-
-  logsAcesso     LogAcesso[]
-  dispositivos   Dispositivo[]
+  id             Int             @id @default(autoincrement())
+  nome           String
+  tipo           String
+  nivelAcesso    String
+  andar          String?
+  capacidade     Int?
+  status         String          @default("ativo")
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
   alertas        Alerta[]
+  dispositivos   Dispositivo[]
   grupos         GrupoArea[]
   horariosVisita HorarioVisita[]
+  logsAcesso     LogAcesso[]
 
   @@map("areas")
 }
 
-// Modelo de Quartos
 model Quarto {
-  id         Int      @id @default(autoincrement())
-  numero     String   @unique
-  andar      String
-  tipo       String
-  capacidade String   @default("1")
-  status     String   @default("disponivel")
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-
-  // Relacionamentos
-
-  pacientes    Paciente[]
-  logsAcesso   LogAcesso[]
-  dispositivos Dispositivo[]
+  id           Int           @id @default(autoincrement())
+  numero       String        @unique
+  andar        String
+  tipo         String
+  capacidade   String        @default("1")
+  status       String        @default("disponivel")
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
   alertas      Alerta[]
+  dispositivos Dispositivo[]
+  logsAcesso   LogAcesso[]
+  pacientes    Paciente[]
 
   @@map("quartos")
 }
 
 model Permissao {
-  id      Int    @id @default(autoincrement())
-  usuario String
-  cargo   String
-  salas   String // Armazena salas como JSON (array de strings)
-  quartos String[] 
-  rfid    String @unique
-  status  String
-
+  id        Int      @id @default(autoincrement())
+  status    String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  cargo     String
+  rfid      String   @unique
+  salas     String
+  usuario   String
+  quartos   String[]
 
   @@map("permissoes")
 }
 
-// Modelo de Logs de Acesso
 model LogAcesso {
-  id            Int      @id @default(autoincrement())
-  rfid          String
-  tipoAcesso    String
-  dataHora      DateTime 
-  status        String
-  dispositivoId String?
-  ipAddress     String?
-  createdAt     DateTime @default(now())
-
-  // Relacionamentos
-  funcionario      Funcionario? @relation(fields: [id], references: [id])
+  id               Int          @id @default(autoincrement())
+  rfid             String
+  tipoAcesso       String
+  dataHora         DateTime
+  status           String
+  dispositivoId    String?
+  ipAddress        String?
+  createdAt        DateTime     @default(now())
   usuarioId        Int?
-  paciente         Paciente?    @relation(fields: [pacienteId], references: [id])
   pacienteId       Int?
-  visitante        Visitante?   @relation(fields: [visitanteId], references: [id])
   visitanteId      Int?
-  area             Area?        @relation(fields: [areaId], references: [id])
   areaId           Int?
-  quarto           Quarto?      @relation(fields: [quartoId], references: [id])
   quartoId         Int?
-  dispositivo      Dispositivo? @relation(fields: [dispositivoIdRef], references: [id])
   dispositivoIdRef Int?
+  area             Area?        @relation(fields: [areaId], references: [id])
+  dispositivo      Dispositivo? @relation(fields: [dispositivoIdRef], references: [id])
+  funcionario      Funcionario  @relation(fields: [id], references: [id])
+  paciente         Paciente?    @relation(fields: [pacienteId], references: [id])
+  quarto           Quarto?      @relation(fields: [quartoId], references: [id])
+  visitante        Visitante?   @relation(fields: [visitanteId], references: [id])
 
   @@map("logs_acesso")
 }
 
-// Modelo de Dispositivos de Acesso
 model Dispositivo {
-  id                Int       @id @default(autoincrement())
-  codigo            String    @unique
+  id                Int         @id @default(autoincrement())
+  codigo            String      @unique
   tipo              String
   localizacao       String
   ipAddress         String?
   macAddress        String?
-  status            String    @default("ativo")
+  status            String      @default("ativo")
   ultimaComunicacao DateTime?
-  createdAt         DateTime  @default(now())
-  updatedAt         DateTime  @updatedAt
-
-  // Relacionamentos
-  area       Area?       @relation(fields: [areaId], references: [id])
-  areaId     Int?
-  quarto     Quarto?     @relation(fields: [quartoId], references: [id])
-  quartoId   Int?
-  logsAcesso LogAcesso[]
-  alertas    Alerta[]
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+  areaId            Int?
+  quartoId          Int?
+  alertas           Alerta[]
+  area              Area?       @relation(fields: [areaId], references: [id])
+  quarto            Quarto?     @relation(fields: [quartoId], references: [id])
+  logsAcesso        LogAcesso[]
 
   @@map("dispositivos")
 }
 
-// Modelo de Alertas
 model Alerta {
-  id              Int       @id @default(autoincrement())
+  id              Int          @id @default(autoincrement())
   tipo            String
   mensagem        String
   nivelSeveridade String
   rfid            String?
   dataHora        DateTime
-  resolvido       Boolean   @default(false)
+  resolvido       Boolean      @default(false)
   dataResolucao   DateTime?
   observacoes     String?
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
-
-  // Relacionamentos
-  funcionario   Funcionario? @relation(fields: [id], references: [id])
-  usuarioId     Int?
-  area          Area?        @relation(fields: [areaId], references: [id])
-  areaId        Int?
-  quarto        Quarto?      @relation(fields: [quartoId], references: [id])
-  quartoId      Int?
-  dispositivo   Dispositivo? @relation(fields: [dispositivoId], references: [id])
-  dispositivoId Int?
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+  usuarioId       Int?
+  areaId          Int?
+  quartoId        Int?
+  dispositivoId   Int?
+  area            Area?        @relation(fields: [areaId], references: [id])
+  dispositivo     Dispositivo? @relation(fields: [dispositivoId], references: [id])
+  funcionario     Funcionario  @relation(fields: [id], references: [id])
+  quarto          Quarto?      @relation(fields: [quartoId], references: [id])
 
   @@map("alertas")
 }
 
-// Modelo de Configurações do Sistema
 model Configuracao {
   id          Int      @id @default(autoincrement())
   chave       String   @unique
@@ -233,67 +198,58 @@ model Configuracao {
   @@map("configuracoes")
 }
 
-// Modelo de Cartões RFID
 model CartaoRfid {
-  id            Int       @id @default(autoincrement())
-  codigo        String    @unique
+  id            Int         @id @default(autoincrement())
+  codigo        String      @unique
   tipo          String
-  status        String    @default("disponivel")
+  status        String      @default("disponivel")
   dataEmissao   DateTime?
   dataExpiracao DateTime?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-
-  // Relacionamentos
-  funcionario Funcionario? @relation(fields: [id], references: [id])
-  usuarioId   Int?         @unique
-  paciente    Paciente?    @relation(fields: [pacienteId], references: [id])
-  pacienteId  Int?         @unique
-  visitante   Visitante?   @relation(fields: [visitanteId], references: [id])
-  visitanteId Int?         @unique
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  usuarioId     Int?        @unique
+  pacienteId    Int?        @unique
+  visitanteId   Int?        @unique
+  funcionario   Funcionario @relation(fields: [id], references: [id])
+  paciente      Paciente?   @relation(fields: [pacienteId], references: [id])
+  visitante     Visitante?  @relation(fields: [visitanteId], references: [id])
 
   @@map("cartoes_rfid")
 }
 
-// Modelo de Grupos de Acesso
 model GrupoAcesso {
-  id          Int      @id @default(autoincrement())
+  id          Int            @id @default(autoincrement())
   nome        String
   descricao   String?
   nivelAcesso String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  // Relacionamentos
-  usuarios UsuarioGrupo[]
-  areas    GrupoArea[]
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  areas       GrupoArea[]
+  usuarios    UsuarioGrupo[]
 
   @@map("grupos_acesso")
 }
 
-// Tabela de Relação entre Grupos e Áreas
 model GrupoArea {
-  grupo   GrupoAcesso @relation(fields: [grupoId], references: [id])
   grupoId Int
-  area    Area        @relation(fields: [areaId], references: [id])
   areaId  Int
+  area    Area        @relation(fields: [areaId], references: [id])
+  grupo   GrupoAcesso @relation(fields: [grupoId], references: [id])
 
   @@id([grupoId, areaId])
   @@map("grupos_areas")
 }
 
-// Tabela de Relação entre Usuários e Grupos
 model UsuarioGrupo {
-  funcionario Funcionario @relation(fields: [usuarioId], references: [id])
   usuarioId   Int
-  grupo       GrupoAcesso @relation(fields: [grupoId], references: [id])
   grupoId     Int
+  grupo       GrupoAcesso @relation(fields: [grupoId], references: [id])
+  funcionario Funcionario @relation(fields: [usuarioId], references: [id])
 
   @@id([usuarioId, grupoId])
   @@map("usuarios_grupos")
 }
 
-// Modelo de Horários de Visita
 model HorarioVisita {
   id           Int      @id @default(autoincrement())
   diaSemana    String
@@ -303,15 +259,12 @@ model HorarioVisita {
   status       String   @default("ativo")
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
-
-  // Relacionamentos
-  area   Area @relation(fields: [areaId], references: [id])
-  areaId Int
+  areaId       Int
+  area         Area     @relation(fields: [areaId], references: [id])
 
   @@map("horarios_visita")
 }
 
-// Modelo de Relatórios
 model Relatorio {
   id          Int      @id @default(autoincrement())
   titulo      String
