@@ -56,7 +56,7 @@ router.put("/:id", async (req, res) => {
         usuario,
         cargo,
         salas: JSON.stringify(salas), // Salvar array como JSON string
-        quartos,
+        quartos: JSON.stringify(quartos),
         rfid,
         status,
       },
