@@ -109,7 +109,7 @@ model Permissao {
   rfid      String   @unique
   salas     String
   usuario   String
-  quartos   String[]
+  quartos   String
 
   @@map("permissoes")
 }

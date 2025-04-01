@@ -7,14 +7,14 @@ const prisma = new PrismaClient()
 // Criar uma permissão
 router.post("/", async (req, res) => {
   try {
-    const { usuario, cargo, salas, quarto, rfid, status } = req.body
+    const { usuario, cargo, salas, quartos, rfid, status } = req.body
 
     const novaPermissao = await prisma.permissao.create({
       data: {
         usuario,
         cargo,
         salas: JSON.stringify(salas), // Armazena salas como string JSON
-        quarto,
+        quartos: JSON.stringify(quartos),
         rfid,
         status,
       },
@@ -48,7 +48,7 @@ router.get("/", async (req, res) => {
 router.put("/:id", async (req, res) => {
   try {
     const { id } = req.params
-    const { usuario, cargo, salas, quarto, rfid, status } = req.body
+    const { usuario, cargo, salas, quartos, rfid, status } = req.body
 
     const permissaoAtualizada = await prisma.permissao.update({
       where: { id: Number(id) },
@@ -56,7 +56,7 @@ router.put("/:id", async (req, res) => {
         usuario,
         cargo,
         salas: JSON.stringify(salas), // Salvar array como JSON string
-        quarto,
+        quartos,
         rfid,
         status,
       },
