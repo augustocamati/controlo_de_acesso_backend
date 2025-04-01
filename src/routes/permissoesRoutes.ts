@@ -8,7 +8,6 @@ const prisma = new PrismaClient()
 router.post("/", async (req, res) => {
   try {
     const { usuario, cargo, salas, quartos, rfid, status } = req.body
-
     const novaPermissao = await prisma.permissao.create({
       data: {
         usuario,
@@ -35,6 +34,7 @@ router.get("/", async (req, res) => {
     const permissoesFormatadas = permissoes.map((permissao) => ({
       ...permissao,
       salas: JSON.parse(permissao.salas),
+      quartos: JSON.parse(permissao.quartos),
     }))
 
     res.json(permissoesFormatadas)
