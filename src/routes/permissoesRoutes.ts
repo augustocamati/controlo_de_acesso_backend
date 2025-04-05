@@ -39,17 +39,15 @@ router.get("/", async (req, res) => {
 
     res.json(permissoesFormatadas)
   } catch (error) {
-    res.status(500).json({ message: "Erro ao listar permissões." ,error})
+    res.status(500).json({ message: "Erro ao listar permissões.", error })
   }
 })
 
-router.get("/", async (req, res) => {
+router.get("/uid", async (req, res) => {
   const { uid } = req.query
 
   if (!uid) {
-    return res
-      .status(400)
-      .json({ status: "erro", mensagem: "UID não fornecido." })
+    throw new Error("UID não fornecido")
   }
 
   try {
@@ -58,10 +56,7 @@ router.get("/", async (req, res) => {
     })
 
     if (!permissao) {
-      return res.status(403).json({
-        status: "erro",
-        mensagem: "Acesso negado. UID não autorizado.",
-      })
+      throw new Error("Permissão não encontrada")
     }
 
     // Se existir, respondemos com os dados
@@ -69,14 +64,13 @@ router.get("/", async (req, res) => {
       status: "ok",
       permissao: permissao, // Ajuste este campo conforme o nome real
     })
-  } catch (error) {
+  } catch (error: any) {
     console.error("Erro ao verificar UID:", error)
     res
       .status(500)
-      .json({ status: "erro", mensagem: "Erro interno do servidor." })
+      .json({ status: "erro", error:error.message })
   }
 })
-
 
 // Atualizar uma permissão
 router.put("/:id", async (req, res) => {
@@ -111,7 +105,7 @@ router.delete("/:id", async (req, res) => {
 
     res.status(204).send()
   } catch (error) {
-    res.status(500).json({ message: "Erro ao deletar permissão." ,error})
+    res.status(500).json({ message: "Erro ao deletar permissão.", error })
   }
 })
 
