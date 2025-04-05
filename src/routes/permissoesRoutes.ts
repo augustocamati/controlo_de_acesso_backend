@@ -14,7 +14,7 @@ router.post("/", async (req, res) => {
         cargo,
         salas: JSON.stringify(salas), // Armazena salas como string JSON
         quartos: JSON.stringify(quartos),
-        rfid,
+        rfid: rfid.toLowerCase().trim(), // Converte o UID para minúsculas
         status,
       },
     })
@@ -40,6 +40,40 @@ router.get("/", async (req, res) => {
     res.json(permissoesFormatadas)
   } catch (error) {
     res.status(500).json({ message: "Erro ao listar permissões." ,error})
+  }
+})
+
+router.get("/", async (req, res) => {
+  const { uid } = req.query
+
+  if (!uid) {
+    return res
+      .status(400)
+      .json({ status: "erro", mensagem: "UID não fornecido." })
+  }
+
+  try {
+    const permissao = await prisma.permissao.findUnique({
+      where: { rfid: String(uid).toLowerCase().trim() }, // Converte o UID para minúsculas
+    })
+
+    if (!permissao) {
+      return res.status(403).json({
+        status: "erro",
+        mensagem: "Acesso negado. UID não autorizado.",
+      })
+    }
+
+    // Se existir, respondemos com os dados
+    res.json({
+      status: "ok",
+      permissao: permissao, // Ajuste este campo conforme o nome real
+    })
+  } catch (error) {
+    console.error("Erro ao verificar UID:", error)
+    res
+      .status(500)
+      .json({ status: "erro", mensagem: "Erro interno do servidor." })
   }
 })
 
