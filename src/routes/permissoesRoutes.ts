@@ -19,7 +19,20 @@ router.post("/", async (req, res) => {
       },
     })
 
-    res.status(201).json(novaPermissao)
+    let usuarioData
+    if(novaPermissao.cargo === "visitante"){
+       usuarioData = await prisma.visitante.findFirst({
+        where: { nome: usuario },
+      })
+ 
+    } else{
+       usuarioData = await prisma.funcionario.findMany({
+        where: { nome: usuario, cargo: novaPermissao.cargo },
+      })
+    }
+    console.log("usuario", usuarioData)
+
+    res.status(201).json({novaPermissao, usuario:usuarioData})
   } catch (error) {
     res.status(500).json({ message: "Erro ao criar permissão.", error })
   }
@@ -35,9 +48,14 @@ router.get("/", async (req, res) => {
       ...permissao,
       salas: JSON.parse(permissao.salas),
       quartos: JSON.parse(permissao.quartos),
+      
     }))
 
-    res.json(permissoesFormatadas)
+
+   
+
+    
+    res.json({permissoesFormatadas})
   } catch (error) {
     res.status(500).json({ message: "Erro ao listar permissões.", error })
   }
@@ -58,11 +76,27 @@ router.get("/uid", async (req, res) => {
     if (!permissao) {
       throw new Error("Permissão não encontrada")
     }
+let usuarioData
+console.log("fora", permissao.cargo)
+if(permissao.cargo === "Visitante"){  
+      console.log("first", permissao.cargo)
+      const usuario = await prisma.visitante.findFirst({
+        where: { nome: permissao.usuario },
+      })
+      usuarioData = usuario
+    }
+    else{
+      const usuario = await prisma.funcionario.findMany({
+        where: { nome: permissao.usuario, cargo: permissao.cargo },
+      })
+      usuarioData= usuario
+    }
 
     // Se existir, respondemos com os dados
     res.json({
       status: "ok",
-      permissao: permissao, // Ajuste este campo conforme o nome real
+      permissao: permissao,
+      usuarioData // Ajuste este campo conforme o nome real
     })
   } catch (error: any) {
     console.error("Erro ao verificar UID:", error)
