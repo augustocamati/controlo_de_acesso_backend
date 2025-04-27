@@ -18,6 +18,7 @@ router.post("/", async (req, res) => {
         status,
       },
     })
+    
 
  
     res.status(201).json(novaPermissao)
@@ -43,7 +44,7 @@ router.get("/", async (req, res) => {
    
 
     
-    res.json({permissoesFormatadas})
+    res.json(permissoesFormatadas)
   } catch (error) {
     res.status(500).json({ message: "Erro ao listar permissões.", error })
   }
