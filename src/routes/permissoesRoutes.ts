@@ -19,20 +19,8 @@ router.post("/", async (req, res) => {
       },
     })
 
-    let usuarioData
-    if(novaPermissao.cargo === "visitante"){
-       usuarioData = await prisma.visitante.findFirst({
-        where: { nome: usuario },
-      })
  
-    } else{
-       usuarioData = await prisma.funcionario.findMany({
-        where: { nome: usuario, cargo: novaPermissao.cargo },
-      })
-    }
-    console.log("usuario", usuarioData)
-
-    res.status(201).json({novaPermissao, usuario:usuarioData})
+    res.status(201).json(novaPermissao)
   } catch (error) {
     res.status(500).json({ message: "Erro ao criar permissão.", error })
   }
