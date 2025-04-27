@@ -15,6 +15,8 @@ router.get("/", async (req, res) => {
     res.status(200).json({ message: "Rota de teste" })
   
 })
+
+router.use("/log-acesso", logRoutes)
 router.use("/permissoes", permissoesRoutes)
 router.use("/pacientes", pacienteRoutes)
 router.use("/funcionarios", funcionarioRoutes)
