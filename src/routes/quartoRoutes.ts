@@ -33,6 +33,7 @@ router.post("/", async (req, res) => {
   try {
     const quarto = await prisma.quarto.create({
       data: req.body,
+      include: {pacientes:true}
     })
     res.status(201).json(quarto)
   } catch (error) {
