@@ -64,7 +64,7 @@ router.get("/logs", async (req, res) => {
       where,
       include: {
         funcionario: true,
-        paciente: true,
+        paciente: true,    
         visitante: true,
         quarto: true,
       },
@@ -185,11 +185,12 @@ router.get("/latest", async (req, res) => {
 // Rota para criar um novo log de acesso (usado pelo sistema de controle de acesso)
 router.post("/", async (req, res) => {
   try {
-    const {
+    const {  
       rfid,
       tipoAcesso,
       status,
       usuarioId,
+      funcionarioId,
       pacienteId,
       visitanteId,
       quartoId,
@@ -201,6 +202,7 @@ router.post("/", async (req, res) => {
         tipoAcesso,
         dataHora: new Date(),
         status,
+        funcionarioId: funcionarioId||usuarioId || null, // Defina o ID do funcionário se necessário
         usuarioId: usuarioId || null,
         pacienteId: pacienteId || null,
         visitanteId: visitanteId || null,
@@ -212,7 +214,6 @@ router.post("/", async (req, res) => {
         visitante: true,
         quarto: true,
       },
-
     })
 
     res.status(201).json(newLog)
