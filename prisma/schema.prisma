@@ -26,7 +26,7 @@ model Funcionario {
   nome       String
   alertas    Alerta?
   cartaoRfid CartaoRfid?
-  logsAcesso LogAcesso?
+  logsAcesso LogAcesso[]
   grupos     UsuarioGrupo[]
 
   @@map("funcionarios")
@@ -124,6 +124,7 @@ model LogAcesso {
   ipAddress        String?
   createdAt        DateTime     @default(now())
   usuarioId        Int?
+  funcionarioId    Int?
   pacienteId       Int?
   visitanteId      Int?
   areaId           Int?
@@ -131,7 +132,7 @@ model LogAcesso {
   dispositivoIdRef Int?
   area             Area?        @relation(fields: [areaId], references: [id])
   dispositivo      Dispositivo? @relation(fields: [dispositivoIdRef], references: [id])
-  funcionario      Funcionario  @relation(fields: [id], references: [id])
+  funcionario      Funcionario?  @relation(fields: [funcionarioId], references: [id])
   paciente         Paciente?    @relation(fields: [pacienteId], references: [id])
   quarto           Quarto?      @relation(fields: [quartoId], references: [id])
   visitante        Visitante?   @relation(fields: [visitanteId], references: [id])
