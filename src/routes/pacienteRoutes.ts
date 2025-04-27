@@ -6,7 +6,9 @@ const prisma = new PrismaClient()
 
 router.get("/", async (req, res) => {
   try {
-    const pacientes = await prisma.paciente.findMany()
+    const pacientes = await prisma.paciente.findMany({
+      include: { quarto: true }, // Inclui os dados do quarto associado
+    })
     res.json(pacientes)
   } catch (error) {
     res.status(500).json({ message: "Erro ao buscar pacientes", error })
@@ -31,6 +33,7 @@ router.post("/", async (req, res) => {
   try {
     const paciente = await prisma.paciente.create({
       data: req.body,
+      include: { quarto: true }, // Inclui os dados do quarto associado
     })
     res.status(201).json(paciente)
   } catch (error) {
