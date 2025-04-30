@@ -26,7 +26,7 @@ router.get("/:id", async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: "Erro ao buscar quarto", error })
   }
-})
+}) 
 
 // Criar novo quarto
 router.post("/", async (req, res) => {
